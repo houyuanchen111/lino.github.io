@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="DESCRIPTION META TAG">
+  <meta property="og:title" content="SOCIAL MEDIA TITLE TAG"/>
+  <meta property="og:description" content="SOCIAL MEDIA DESCRIPTION TAG TAG"/>
+  <meta property="og:url" content="URL OF THE WEBSITE"/>
+  <meta property="og:image" content="static/image/your_banner_image.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta name="twitter:title" content="TWITTER BANNER TITLE META TAG">
+  <meta name="twitter:description" content="TWITTER BANNER DESCRIPTION META TAG">
+  <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="keywords" content="KEYWORDS SHOULD BE PLACED HERE">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Light of Normals: Unified Feature Representation for Universal Photometric Stereo</title>
+  <link rel="icon" type="image/x-icon" href="static/images/lino.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <style>
+    /* Styles for 6x6 Image Grid with Hover Preview */
+    .image-grid-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      padding: 10px;
+      position: relative; 
+    }
+
+    .image-grid-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+      cursor: pointer; 
+      position: relative; 
+      z-index: 1; 
+      transition: transform 0.25s ease, box-shadow 0.25s ease, z-index 0s linear 0.125s; 
+    }
+
+    .image-grid-container img:hover {
+      transform: scale(1.25); 
+      z-index: 10; 
+      box-shadow: 0px 6px 12px rgba(0,0,0,0.25); 
+    }
+
+    #localImagePreviewBox {
+      position: fixed; 
+      display: none; 
+      gap: 8px; 
+      padding: 10px;
+      background-color: white;
+      border-radius: 6px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+      z-index: 20; 
+      pointer-events: none; 
+      transition: opacity 0.1s ease-in-out; 
+    }
+
+    #localImagePreviewBox img {
+      width: 300px; 
+      height: 300px; 
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+
+    /* Styles for Auto-Looping Image Scroller (New) */
+/* Styles for Auto-Looping Image Scroller */
+    .scroll-strip-title {
+      margin-bottom: 20px; 
+    }
+    
+    .scroll-strip-container {
+      width: 100%; 
+      overflow: hidden; 
+      padding: 10px 0; 
+      box-sizing: border-box;
+      background-color: #fff; 
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: grab;
+    }
+    .scroll-strip-container:active {
+      cursor: grabbing;
+    }
+
+    .scroll-strip-content {
+  display: flex;
+  flex-wrap: nowrap; 
+  overflow-x: auto;  /* 必须保留 'auto' 或 'scroll' 以便内容可以实际滚动 */
+  overflow-y: hidden; 
+  
+  /* 移除或减少 padding-bottom，因为滚动条隐藏后不再需要为其预留空间 */
+  /* padding-bottom: 15px; */ 
+  padding-left: 15px; 
+  padding-right: 15px; 
+  -webkit-overflow-scrolling: touch; 
+
+  /* --- 开始：隐藏滚动条的CSS --- */
+  /* For Firefox */
+  scrollbar-width: none; 
+
+  /* For Internet Explorer and Edge (older versions) */
+  -ms-overflow-style: none;  
+  /* --- 结束：隐藏滚动条的CSS --- */
+}
+
+/* For WebKit-based browsers (Chrome, Safari, newer Edge, Opera) */
+.scroll-strip-content::-webkit-scrollbar {
+  display: none; /* 或者设置为 width: 0 !important; height: 0 !important; */
+}
+
+/* 之前用于美化滚动条的 ::-webkit-scrollbar-track 和 ::-webkit-scrollbar-thumb 规则可以被注释掉或删除，
+   因为滚动条本身已经被隐藏了。
+.scroll-strip-content::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+.scroll-strip-content::-webkit-scrollbar-thumb {
+  background: #aaa; 
+  border-radius: 10px;
+}
+.scroll-strip-content::-webkit-scrollbar-thumb:hover {
+  background: #777; 
+}
+*/
+    .scroll-item {
+      flex: 0 0 auto;     
+      width: 150px;       
+      height: 150px;      
+      margin-right: 15px; 
+      background-color: #e0e0e0; 
+      border-radius: 8px;
+      overflow: hidden;   
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: relative; /* 为内部img的z-index提供上下文 */
+    }
+    .scroll-item:last-child {
+       margin-right: 0; 
+    }
+
+    .scroll-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+      display: block;    
+      cursor: pointer; /* 添加cursor pointer */
+      position: relative; /* 使z-index生效 */
+      z-index: 1; /* 默认z-index */
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* 为气泡放大添加过渡 */
+    }
+
+    /* 新增：滚动带中图片的气泡放大效果 */
+    .scroll-item:hover img { /* 或者 .scroll-item img:hover，取决于你希望整个item还是仅图片触发 */
+      transform: scale(1.1); /* 稍微小一点的放大，避免过于干扰 */
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      z-index: 15; /* 高于普通图片，低于PreviewBox */
+    }
+
+    /* #localImagePreviewBox 及其内部 img 的样式保持不变，确保它的 z-index (例如 20) 高于 .scroll-item:hover img 的 z-index (例如 15) */
+
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Light of Normals: Unified Feature Representation for
+Universal Photometric Stereo</h1>
+            <div class="is-size-5 publication-authors">
+                <span class="author-block">NIPS 2025<br>Submission #10268</span>
+            </div>
+            <div class="column has-text-centered">
+                <!-- <div class="publication-links">
+                    <span class="link-block"><a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span></a></span>
+                    <span class="link-block"><a href="static/pdfs/supplementary_material.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Supplementary</span></a></span>
+                    <span class="link-block"><a href="https://github.com/YOUR REPO HERE" target="_blank" class="external-link button is-normal is-rounded is-dark"><span class="icon"><i class="fab fa-github"></i></span><span>Code</span></a></span>
+                    <span class="link-block"><a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank" class="external-link button is-normal is-rounded is-dark"><span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span></a></span>
+                </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="static/images/teaser.png" alt="Teaser Image" style="width: 100%; max-height: 500px; object-fit: contain;">
+        <h2 class="subtitle has-text-centered">
+         (Left) Given multiple images from the same viewpoint under varying lighting, our method outperforms existing universal photometric stereo methods in accuracy and detail, even exceeding the professional 3D scanner. (Right) On the DiliGent benchmark, with similar decoders, higher feature consistency (SSIM and CSIM) in encoder features corresponds to better performance, indicated by a higher inverse mean angular error.
+       </h2>
+     </div>
+   </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+             Universal photometric stereo (PS) aims to recover high-quality surface normals from objects under arbitrary lighting conditions without relying on specific illumination models. Despite recent advances such as SDM-UniPS and Uni MS-PS, two fundamental challenges persist: 1) the deep coupling between varying illumination and surface normal features, where ambiguity in observed intensity makes it difficult to determine whether brightness variations stem from lighting changes or surface orientation; and 2) the preservation of high-frequency geometric details in complex surfaces, where intricate geometries create self-shadowing, inter-reflections, and subtle normal variations that conventional feature processing operations struggle to capture accurately. 
+           </p>
+         </div>
+       </div>
+     </div>
+   </div>
+  </section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full">
+          <h2 class="title is-3 has-text-centered">Method</h2>
+          <div class="content has-text-justified">
+            <div class="columns">
+              <div class="column" style="margin-right: 20px;">
+                <p>
+                  <b>Overview of the LiNo-UniPS architecture,</b> featuring a Light-Normal Contextual Encoder, Decoder, and loss computation. 
+                </p>
+                <img src="./static/images/Method.png" alt="Left Top Image" style="width: 100%; margin-bottom: 30px;">
+                <p>
+                  LiNo-UniPS significantly performs better when processing data characterized by <b>high-frequency information</b>.
+                </p>
+                <img src="./static/images/results_compare.png" alt="Left Bottom Image" style="width: 100%;">
+              </div>
+              <div class="column">
+                <p>
+                  Attention maps of <b>lighting registers tokens</b> on the encoder's final-layer. Different tokens exhibit specialized attention on diverse lighting information from multiple directions.
+                </p>
+                <img src="./static/images/attn_map.png" alt="Right Top Image" style="width: 100%; margin-bottom: 0px;">
+                <p>
+                 The features extracted by our LiNO-UniPS encoder effectively disentangle lighting from surface normal information and concurrently exhibit enhanced consistency.
+                </p>
+                <img src="./static/images/feature_pca.png" alt="Right Bottom Image" style="width: 100%;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Some Visual Results</h2>
+      <p class="subtitle is-5 has-text-centered" style="margin-top: -0.5rem; margin-bottom: 1.5rem;">
+      Hover to view an example from the multi-light input images and the corresponding surface normals reconstructed by LiNo-UniPS. 
+      </p>
+      <div class="image-grid-container">
+        <img src="static/images/image_1.png" alt="Image 1" data-paired-image-src="static/images/normal_1.png">
+        <img src="static/images/image_2.png" alt="Image 2" data-paired-image-src="static/images/normal_2.png">
+        <img src="static/images/image_3.png" alt="Image 3" data-paired-image-src="static/images/normal_3.png">
+        <img src="static/images/image_4.png" alt="Image 4" data-paired-image-src="static/images/normal_4.png">
+        <img src="static/images/image_5.png" alt="Image 5" data-paired-image-src="static/images/normal_5.png">
+        <img src="static/images/image_6.png" alt="Image 6" data-paired-image-src="static/images/normal_6.png">
+        <img src="static/images/image_7.png" alt="Image 7" data-paired-image-src="static/images/normal_7.png">
+        <img src="static/images/image_8.png" alt="Image 8" data-paired-image-src="static/images/normal_8.png">
+        <img src="static/images/image_9.png" alt="Image 9" data-paired-image-src="static/images/normal_9.png">
+        <img src="static/images/image_10.png" alt="Image 10" data-paired-image-src="static/images/normal_10.png">
+        <img src="static/images/image_11.png" alt="Image 11" data-paired-image-src="static/images/normal_11.png">
+        <img src="static/images/image_12.png" alt="Image 12" data-paired-image-src="static/images/normal_12.png">
+        <img src="static/images/image_13.png" alt="Image 13" data-paired-image-src="static/images/normal_13.png">
+        <img src="static/images/image_14.png" alt="Image 14" data-paired-image-src="static/images/normal_14.png">
+        <img src="static/images/image_15.png" alt="Image 15" data-paired-image-src="static/images/normal_15.png">
+        <img src="static/images/image_16.png" alt="Image 16" data-paired-image-src="static/images/normal_16.png">
+        <img src="static/images/image_17.png" alt="Image 17" data-paired-image-src="static/images/normal_17.png">
+        <img src="static/images/image_18.png" alt="Image 18" data-paired-image-src="static/images/normal_18.png">
+        <img src="static/images/image_19.png" alt="Image 19" data-paired-image-src="static/images/normal_19.png">
+        <img src="static/images/image_20.png" alt="Image 20" data-paired-image-src="static/images/normal_20.png">
+        <img src="static/images/image_21.png" alt="Image 21" data-paired-image-src="static/images/normal_21.png">
+        <img src="static/images/image_22.png" alt="Image 22" data-paired-image-src="static/images/normal_22.png">
+        <img src="static/images/image_23.png" alt="Image 23" data-paired-image-src="static/images/normal_23.png">
+        <img src="static/images/image_24.png" alt="Image 24" data-paired-image-src="static/images/normal_24.png">
+        <img src="static/images/image_25.png" alt="Image 25" data-paired-image-src="static/images/normal_25.png">
+        <img src="static/images/image_26.png" alt="Image 26" data-paired-image-src="static/images/normal_26.png">
+        <img src="static/images/image_27.png" alt="Image 27" data-paired-image-src="static/images/normal_27.png">
+        <img src="static/images/image_28.png" alt="Image 28" data-paired-image-src="static/images/normal_28.png">
+        <img src="static/images/image_29.png" alt="Image 29" data-paired-image-src="static/images/normal_29.png">
+        <img src="static/images/image_30.png" alt="Image 30" data-paired-image-src="static/images/normal_30.png">
+      </div>
+    </div>
+  </section>
+  
+<section class="section pb-1">
+   <h2 class="title is-3 has-text-centered"> PS-Verse Dataset</h2>
+  <div class="container is-max-desktop">
+    <h2 class="title is-5 has-text-centered scroll-strip-title">Level 1</h2>
+    <div class="scroll-strip-container">
+      <div class="scroll-strip-content">
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_1.png" alt="Showcase Image 1" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_1.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_2.png" alt="Showcase Image 2" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_2.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_3.png" alt="Showcase Image 10" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_3.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_4.png" alt="Showcase Image 11" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_4.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_5.png" alt="Showcase Image 12" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_5.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_6.png" alt="Showcase Image 20" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_6.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_8.png" alt="Showcase Image 21" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_8.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_10.png" alt="Showcase Image 30" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_10.png">
+        </div>
+        
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_12.png" alt="Showcase Image 31" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_12.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_1/low_normal_13.png" alt="Showcase Image 40" data-paired-image-src="static/images/ps-verse/level_1/low_normal_image_13.png">
+        </div>
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section py-1">
+  <div class="container is-max-desktop">
+    <h2 class="title is-5 has-text-centered scroll-strip-title">Level 2 </h2>
+    <div class="scroll-strip-container">
+      <div class="scroll-strip-content">
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_1.png" alt="Showcase Image 1" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_1.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_2.png" alt="Showcase Image 2" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_2.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_3.png" alt="Showcase Image 10" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_3.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_4.png" alt="Showcase Image 11" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_4.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_5.png" alt="Showcase Image 12" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_5.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_6.png" alt="Showcase Image 20" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_6.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_8.png" alt="Showcase Image 21" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_8.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_10.png" alt="Showcase Image 30" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_10.png">
+        </div>
+        
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_16.png" alt="Showcase Image 31" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_16.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_2/low_normal_7.png" alt="Showcase Image 40" data-paired-image-src="static/images/ps-verse/level_2/low_normal_image_7.png">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section py-1">
+  <div class="container is-max-desktop">
+    <h2 class="title is-5 has-text-centered scroll-strip-title">Level 3</h2>
+    <div class="scroll-strip-container">
+      <div class="scroll-strip-content">
+          <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_1.png" alt="Showcase Image 1" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_1.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_2.png" alt="Showcase Image 2" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_2.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_3.png" alt="Showcase Image 10" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_3.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_4.png" alt="Showcase Image 11" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_4.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_5.png" alt="Showcase Image 12" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_5.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_6.png" alt="Showcase Image 20" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_6.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_8.png" alt="Showcase Image 21" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_8.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_9.png" alt="Showcase Image 30" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_9.png">
+        </div>
+        
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_0.png" alt="Showcase Image 31" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_0.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_3/low_normal_7.png" alt="Showcase Image 40" data-paired-image-src="static/images/ps-verse/level_3/low_normal_image_7.png">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section py-1">
+  <div class="container is-max-desktop">
+    <h2 class="title is-5 has-text-centered scroll-strip-title">Level 4</h2>
+    <div class="scroll-strip-container">
+      <div class="scroll-strip-content">
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_1.png" alt="Showcase Image 1" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_1.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_3.png" alt="Showcase Image 2" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_3.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_4.png" alt="Showcase Image 10" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_4.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_11.png" alt="Showcase Image 11" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_11.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_14.png" alt="Showcase Image 12" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_14.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_15.png" alt="Showcase Image 20" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_15.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_16.png" alt="Showcase Image 21" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_16.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_18.png" alt="Showcase Image 30" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_18.png">
+        </div>
+        
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_19.png" alt="Showcase Image 31" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_19.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_4/low_normal_22.png" alt="Showcase Image 40" data-paired-image-src="static/images/ps-verse/level_4/low_normal_image_22.png">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section py-1">
+  <div class="container is-max-desktop">
+    <h2 class="title is-5 has-text-centered scroll-strip-title">Level 5</h2>
+    <div class="scroll-strip-container">
+      <div class="scroll-strip-content">
+           <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_0.png" alt="Showcase Image 1" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_0.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_1.png" alt="Showcase Image 2" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_1.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_2.png" alt="Showcase Image 10" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_2.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_3.png" alt="Showcase Image 11" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_3.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_4.png" alt="Showcase Image 12" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_4.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_5.png" alt="Showcase Image 20" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_5.png">
+        </div>
+
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_6.png" alt="Showcase Image 21" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_6.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_7.png" alt="Showcase Image 30" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_7.png">
+        </div>
+        
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_8.png" alt="Showcase Image 31" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_8.png">
+        </div>
+        <div class="scroll-item">
+          <img src="static/images/ps-verse/level_5/high_normal_9.png" alt="Showcase Image 40" data-paired-image-src="static/images/ps-verse/level_5/high_normal_image_9.png">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="hero is-small is-light"><div class="hero-body"><div class="container"><h2 class="title">Appendix</h2><iframe src="Appendix.pdf" width="100%" height="550"></iframe></div></div></section>
+  
+  
+  <footer class="footer">
+    <div class="container"><div class="columns is-centered"><div class="column is-8"><div class="content"><p>This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page. You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p></div></div></div></div>
+  </footer>
+
+  <div id="localImagePreviewBox" style="display:none;">
+    <img id="localPreviewImg1" src="" alt="Preview 1">
+    <img id="localPreviewImg2" src="" alt="Preview 2">
+  </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://documentcloud.adobe.com/view-sdk/main.js"></script> 
+<script defer src="static/js/fontawesome.all.min.js"></script>
+<script src="static/js/bulma-carousel.min.js"></script>
+<script src="static/js/bulma-slider.min.js"></script>
+<script src="static/js/index.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // --- 通用变量和函数区 (用于 PreviewBox) ---
+  const localPreviewBox = document.getElementById('localImagePreviewBox');
+  const localPreviewImg1 = document.getElementById('localPreviewImg1');
+  const localPreviewImg2 = document.getElementById('localPreviewImg2');
+  let sharedHidePreviewTimeout; 
+  const MOUSE_LEAVE_DELAY = 100; 
+  const OFFSET_FROM_ELEMENT = 10; 
+
+  function showPreviewBox(targetElement, mainSrc, pairedSrc) {
+    if (!localPreviewBox || !localPreviewImg1 || !localPreviewImg2) return;
+    clearTimeout(sharedHidePreviewTimeout);
+
+    if (pairedSrc) {
+      localPreviewImg1.setAttribute('src', mainSrc);
+      localPreviewImg2.setAttribute('src', pairedSrc);
+      localPreviewBox.style.display = 'flex';
+
+      const rect = targetElement.getBoundingClientRect();
+      const previewBoxHeight = localPreviewBox.offsetHeight;
+      const previewBoxWidth = localPreviewBox.offsetWidth;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      let topPosition = rect.top - previewBoxHeight - OFFSET_FROM_ELEMENT;
+      let leftPosition = rect.left + (rect.width / 2) - (previewBoxWidth / 2);
+
+      if (topPosition < OFFSET_FROM_ELEMENT) {
+        topPosition = rect.bottom + OFFSET_FROM_ELEMENT;
+      }
+      if (topPosition + previewBoxHeight > viewportHeight - OFFSET_FROM_ELEMENT) {
+        topPosition = viewportHeight - previewBoxHeight - OFFSET_FROM_ELEMENT;
+        if (topPosition < OFFSET_FROM_ELEMENT) topPosition = OFFSET_FROM_ELEMENT;
+      }
+      if (leftPosition < OFFSET_FROM_ELEMENT) {
+        leftPosition = OFFSET_FROM_ELEMENT;
+      }
+      if (leftPosition + previewBoxWidth > viewportWidth - OFFSET_FROM_ELEMENT) {
+        leftPosition = viewportWidth - previewBoxWidth - OFFSET_FROM_ELEMENT;
+      }
+
+      localPreviewBox.style.top = `${topPosition}px`;
+      localPreviewBox.style.left = `${leftPosition}px`;
+    }
+  }
+
+  function hidePreviewBoxOnLeave() {
+    if (!localPreviewBox) return;
+    sharedHidePreviewTimeout = setTimeout(() => {
+      if (!localPreviewBox.matches(':hover')) {
+        localPreviewBox.style.display = 'none';
+      }
+    }, MOUSE_LEAVE_DELAY);
+  }
+
+  if (localPreviewBox) {
+    localPreviewBox.addEventListener('mouseenter', () => {
+      clearTimeout(sharedHidePreviewTimeout);
+      localPreviewBox.style.display = 'flex';
+    });
+    localPreviewBox.addEventListener('mouseleave', () => {
+      localPreviewBox.style.display = 'none';
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && localPreviewBox && localPreviewBox.style.display === 'flex') {
+      localPreviewBox.style.display = 'none';
+    }
+  });
+
+  // --- 1. 6x6 图片网格的悬停预览逻辑 (保持不变) ---
+  const gridImages = document.querySelectorAll('.image-grid-container img');
+  gridImages.forEach(gridImage => {
+    gridImage.addEventListener('mouseenter', function() {
+      showPreviewBox(this, this.getAttribute('src'), this.dataset.pairedImageSrc);
+    });
+    gridImage.addEventListener('mouseleave', hidePreviewBoxOnLeave);
+  });
+
+  // --- 2. 处理所有自动循环滚动图片带的逻辑 (已更新滚动方向) ---
+  const allScrollerContents = document.querySelectorAll('.scroll-strip-content');
+
+  allScrollerContents.forEach((scroller, index) => {
+    const scrollContainer = scroller.closest('.scroll-strip-container');
+    
+    if (!scrollContainer) {
+      return; 
+    }
+
+    let scrollAmount;
+    // 根据索引判断滚动方向：奇数行 (index 0, 2, 4...) 向左，偶数行 (index 1, 3, 5...) 向右
+    if ((index % 2) === 0) { // 0-indexed: 0, 2, 4... (即第 1, 3, 5... 行)
+      scrollAmount = -1; // 向左滚动
+    } else { // 0-indexed: 1, 3, 5... (即第 2, 4, 6... 行)
+      scrollAmount = 1;  // 向右滚动
+    }
+    
+    const scrollIntervalTime = 30 + (index * 2); // 给每个滚动带略微不同的基础速度 (可选)
+    let scrollIntervalId;
+    let originalScrollWidth; 
+    let isThisScrollerPausedByContainerHover = false;
+    let isHoveringThisScrollerItemOrPreview = false; // 用于跟踪是否悬停在具体项目或其预览上
+
+    function initializeThisScroller() {
+      if (scroller.dataset.initialized === 'true') {
+        if (!originalScrollWidth && scroller.children.length > 0) {
+             originalScrollWidth = scroller.scrollWidth / 2; 
+        }
+        return true;
+      }
+
+      if (scroller.children.length > 0) {
+        originalScrollWidth = scroller.scrollWidth; 
+        const originalContent = scroller.innerHTML;
+        scroller.innerHTML += originalContent; 
+        scroller.dataset.initialized = 'true'; 
+        
+        // 如果是向左滚动，并且内容已复制，设置初始滚动位置到复制内容的起点
+        if (scrollAmount < 0 && originalScrollWidth > 0) {
+            scroller.scrollLeft = originalScrollWidth;
+        }
+        
+        setupThisScrollerItemListeners(scroller); 
+        return true;
+      }
+      return false;
+    }
+    
+    function setupThisScrollerItemListeners(currentScroller) {
+        const allScrollItemsImages = currentScroller.querySelectorAll('.scroll-item img');
+        allScrollItemsImages.forEach(scrollImage => {
+            scrollImage.addEventListener('mouseenter', function() {
+                isHoveringThisScrollerItemOrPreview = true; // 标记悬停在项目上
+                stopThisAutoScrolling(); // 悬停项目时，也应停止其所在行的滚动
+                showPreviewBox(this, this.getAttribute('src'), this.dataset.pairedImageSrc);
+            });
+            scrollImage.addEventListener('mouseleave', function() {
+                isHoveringThisScrollerItemOrPreview = false; // 取消标记
+                hidePreviewBoxOnLeave();
+                // 只有当鼠标也离开整个滚动带容器时才尝试恢复滚动
+                // (由scrollContainer的mouseleave事件处理)
+                // 或者，如果希望鼠标一离开项目（且不进入预览框）就滚动，可以在这里调用startThisAutoScrolling，但需检查isThisScrollerPausedByContainerHover
+                if(!isThisScrollerPausedByContainerHover){
+                    startThisAutoScrolling();
+                }
+            });
+        });
+    }
+
+    function startThisAutoScrolling() {
+      // 如果鼠标正悬停在整个容器上，或者某个具体项目/预览框上，则不启动自动滚动
+      if (isThisScrollerPausedByContainerHover || isHoveringThisScrollerItemOrPreview) return; 
+
+      if (typeof originalScrollWidth === 'undefined' && !initializeThisScroller()) {
+        return; 
+      }
+      if (scrollIntervalId) clearInterval(scrollIntervalId);
+
+      scrollIntervalId = setInterval(() => {
+        if (isThisScrollerPausedByContainerHover || isHoveringThisScrollerItemOrPreview) { // 再次检查
+            clearInterval(scrollIntervalId);
+            return;
+        }
+
+        scroller.scrollLeft += scrollAmount;
+        
+        if (scrollAmount > 0) { // 向右滚动 (内容向左移动)
+          if (scroller.scrollLeft >= originalScrollWidth) {
+            scroller.scrollLeft = 0;
+          }
+        } else { // 向左滚动 (内容向右移动) (scrollAmount < 0)
+          if (scroller.scrollLeft <= 0) { 
+            // 当滚动到复制内容与原始内容的接缝处 (即最左端)
+            // 跳回到原始内容的末尾 (视觉上是复制内容的末尾，即 originalScrollWidth)
+            scroller.scrollLeft = originalScrollWidth;
+          }
+        }
+      }, scrollIntervalTime);
+    }
+
+    function stopThisAutoScrolling() {
+      clearInterval(scrollIntervalId);
+    }
+
+    scrollContainer.addEventListener('mouseenter', () => {
+      isThisScrollerPausedByContainerHover = true;
+      stopThisAutoScrolling();
+    });
+    scrollContainer.addEventListener('mouseleave', () => {
+      isThisScrollerPausedByContainerHover = false;
+      // 只有当鼠标没有悬停在任何子项或其预览框上时才恢复滚动
+      if (!isHoveringThisScrollerItemOrPreview) { 
+         startThisAutoScrolling();
+      }
+    });
+
+    setTimeout(() => {
+        if (initializeThisScroller()) {
+            startThisAutoScrolling();
+        }
+    }, 200 + (index * 100)); 
+  });
+});
+</script>
+</html>
