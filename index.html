@@ -668,20 +668,15 @@
         <h2 class="title is-3 has-text-centered" style="margin-top: 10px; align-self: flex-start;"> Downstream Application</h2>
         <div class="content has-text-justified" style="align-self: flex-start;">
           <p>
-           The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation: Hi3DGen.
+           The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation:  
+           <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
+    Hi👋3DGen:
+  </a>
           </p>
         </div>
 
         
-        <!-- <div class="viewer-container">
-          <div class="viewer-label">Hi👋3DGen:</div>
-            <model-viewer id="modelViewerComparison1" class="model-viewer-texture" loading="eager" src="mesh.glb"
-              touch-action="pan-y" environment-image="legacy" zoom-sensitivity="0.2"
-              camera-controls disable-tap min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 10m"  auto-rotate interaction-prompt="none"
-              shadow-intensity="1" style="width: 100%; height: 100%;">
-            </model-viewer>
-      </div> -->
-        
+
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
         <!-- <div id="toggleTexturedComparison" class="toggle-container">
@@ -693,10 +688,12 @@
     <div class="main-viewer-container">
       
         <model-viewer id="mainModelViewer"
-                      src="mesh.glb" alt="一个机器人的3D模型" camera-controls
+                      src="" alt= camera-controls
                       auto-rotate
-          
+                      loading="eager"
+                      poster="./static/images/loading.gif"
                       environment-image="neutral">
+                  
         </model-viewer>
     </div>
 
@@ -709,6 +706,7 @@
              src="static/models/img_1.png" 
              data-model-src="static/models/model_1.glb"
              data-normal-src="static/models/nml_1.png">
+             
 
         <img class="selectable-image selected" 
              src="static/models/img_2.png" 
