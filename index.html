@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="static/css/index.css">
-
+  <link rel="stylesheet" href="./static/css/selection-panel.css">
   <style>
     /* Styles for 6x6 Image Grid with Hover Preview */
     .image-grid-container {
@@ -182,6 +182,47 @@
       -webkit-background-clip: text;
       color: transparent;
       font-weight: 600; /* 加粗一点效果更好 */
+    }
+        .viewer-container {
+      width: 90%;
+      max-width: 800px;
+      height: 600px;
+      border: 2px solid #cccccc;
+      border-radius: 15px;
+      margin: 40px auto;
+      
+      /* --- 👇 关键改动：为父容器设置相对定位 --- */
+      position: relative; 
+      
+      /* 我们把内边距 padding 从这里移到 model-viewer 上，
+        这样标签就可以紧贴边框的角落，效果更好。
+      */
+    }
+
+    /* --- 👇 这是为新标签添加的全新样式 --- */
+    .viewer-label {
+      position: absolute; /* 设置绝对定位 */
+      top: 10px;          /* 距离父容器顶部 10px */
+      left: 10px;         /* 距离父容器左侧 10px */
+      
+      /* --- 以下是让标签更好看的样式 (可选) --- */
+      padding: 5px 10px; /* 标签内部的留白 */
+      background-color: rgba(0, 0, 0, 0.5); /* 半透明的黑色背景 */
+      color: white; /* 白色文字 */
+      font-family: sans-serif; /* 使用更常见的字体 */
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px; /* 标签自身的圆角 */
+      z-index: 10; /* 确保标签显示在 model-viewer 的上层 */
+      pointer-events: none; /* 让鼠标可以“穿透”标签，直接与模型交互 */
+    }
+
+    model-viewer {
+      width: 80%;
+      height: 80%;
+      max-width: 800px;
+      max-height: 600px;
+      border-radius: 10px;
     }
 </style>
 </head>
@@ -618,7 +659,108 @@ Universal Photometric Stereo</h1>
   </div>
 </section>
 
-  <section class="hero is-small is-light"><div class="hero-body"><div class="container"><h2 class="title">Appendix</h2><iframe src="Appendix.pdf" width="100%" height="550"></iframe></div></div></section>
+
+
+
+<section class="section hero is-light">
+    <div class="hero-body" style="padding: 0;">
+      <div class="container is-max-desktop" id="comparison_container">
+        <h2 class="title is-3 has-text-centered" style="margin-top: 10px; align-self: flex-start;"> Downstream Application</h2>
+        <div class="content has-text-justified" style="align-self: flex-start;">
+          <p>
+           The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation: Hi3DGen.
+          </p>
+        </div>
+
+        
+        <!-- <div class="viewer-container">
+          <div class="viewer-label">Hi👋3DGen:</div>
+            <model-viewer id="modelViewerComparison1" class="model-viewer-texture" loading="eager" src="mesh.glb"
+              touch-action="pan-y" environment-image="legacy" zoom-sensitivity="0.2"
+              camera-controls disable-tap min-camera-orbit="auto auto 1m" max-camera-orbit="auto auto 10m"  auto-rotate interaction-prompt="none"
+              shadow-intensity="1" style="width: 100%; height: 100%;">
+            </model-viewer>
+      </div> -->
+        
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+        <!-- <div id="toggleTexturedComparison" class="toggle-container">
+          <button class="toggle-button toggle-left">Geometry only</button>
+          <button class="toggle-button toggle-right active">Textured</button>
+        </div> -->
+  
+      
+    <div class="main-viewer-container">
+      
+        <model-viewer id="mainModelViewer"
+                      src="mesh.glb" alt="一个机器人的3D模型" camera-controls
+                      auto-rotate
+          
+                      environment-image="neutral">
+        </model-viewer>
+    </div>
+
+    <hr>
+   
+
+    <div class="selection-panel">
+      
+        <img class="selectable-image selected" 
+             src="static/models/img_1.png" 
+             data-model-src="static/models/model_1.glb"
+             data-normal-src="static/models/nml_1.png">
+
+        <img class="selectable-image selected" 
+             src="static/models/img_2.png" 
+             data-model-src="static/models/model_2.glb"
+             data-normal-src="static/models/nml_2.png">
+             
+       <img class="selectable-image selected" 
+             src="static/models/img_3.png" 
+             data-model-src="static/models/model_3.glb"
+             data-normal-src="static/models/nml_3.png">
+      <img class="selectable-image selected" 
+            src="static/models/img_4.png" 
+            data-model-src="static/models/model_4.glb"
+            data-normal-src="static/models/nml_4.png">
+      <img class="selectable-image selected" 
+          src="static/models/squirrel_rgba.png" 
+          data-model-src="static/models/squirrel.glb"
+          data-normal-src="static/models/squirrel_nml.png">
+      <img class="selectable-image selected" 
+        src="static/models/owl_rgba.png" 
+        data-model-src="static/models/owl.glb"
+        data-normal-src="static/models/owl_nml.png">
+      <img class="selectable-image selected" 
+        src="static/models/buddha_rgba.png" 
+        data-model-src="static/models/buddha.glb"
+        data-normal-src="static/models/buddha_nml.png">
+    </div>
+
+    <div id="enlarged-images-container">
+        <img id="enlarged-image" src="" alt="放大预览图">
+        <img id="enlarged-image-normal" src="" alt="放大预览法线图">
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </div>
+  </section>
+
+
+
+
   
   
   <footer class="footer">
@@ -636,7 +778,7 @@ Universal Photometric Stereo</h1>
 <script src="static/js/bulma-carousel.min.js"></script>
 <script src="static/js/bulma-slider.min.js"></script>
 <script src="static/js/index.js"></script>
-
+<script src="static/js/selection-panel.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // --- 通用变量和函数区 (用于 PreviewBox) ---
@@ -842,5 +984,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200 + (index * 100)); 
   });
 });
+
+
 </script>
+
 </html>
