@@ -218,8 +218,8 @@
     }
 
     model-viewer {
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      height: 100%;
       max-width: 800px;
       max-height: 600px;
       border-radius: 10px;
@@ -664,99 +664,100 @@
 
 
 
+
 <section class="section hero is-light">
-    <div class="hero-body" style="padding: 0;">
+  <div class="hero-body" style="padding: 0;">
       <div class="container is-max-desktop" id="comparison_container">
-        <h2 class="title is-3 has-text-centered" style="margin-top: 10px; align-self: flex-start;"> Downstream Application</h2>
-        <div class="content has-text-justified" style="align-self: flex-start;">
-          <p>
-           The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation:  
-           <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
-    Hi👋3DGen:
-  </a>
-          </p>
-        </div>
+          <h2 class="title is-3 has-text-centered" style="margin-top: 10px; align-self: flex-start;">Downstream Application</h2>
+          <div class="content has-text-justified" style="align-self: flex-start;">
+              <p>
+                  The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation.
+                  <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
+                    Hi👋3DGen:
+                  </a>
+              </p>
+          </div>
 
-        
+          <!-- 设置导入映射 -->
+          <script type="importmap">
+              {
+                  "imports": {
+                      "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+                      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+                  }
+              }
+          </script>
 
+          <!-- 查看器容器 -->
+          <div class="main-viewer-container">
+              <div id="threejs-viewer-container" style="width: 100%; height: 500px; background-color: #333; border-radius: 8px;"></div>
+          </div>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-        <!-- <div id="toggleTexturedComparison" class="toggle-container">
-          <button class="toggle-button toggle-left">Geometry only</button>
-          <button class="toggle-button toggle-right active">Textured</button>
-        </div> -->
-  
-      
-    <div class="main-viewer-container">
-      
-        <model-viewer id="mainModelViewer"
-                      src="" alt= camera-controls
-                      auto-rotate
-                      loading="eager"
-                      poster="./static/images/loading.gif"
-                      environment-image="neutral">
-                  
-        </model-viewer>
-    </div>
+          <hr>
 
-    <hr>
-   
+          <!-- 缩略图区域 -->
+          <div class="selection-panel">
+              <!-- 注意：这里移除了所有图片的'selected'类，因为初始状态应该由脚本控制 -->
+              <img class="selectable-image" src="static/models/img_1.png" data-model-src="static/models/model_1.glb">
+              <img class="selectable-image" src="static/models/img_2.png" data-model-src="static/models/model_2.glb">
+              <img class="selectable-image" src="static/models/img_3.png" data-model-src="static/models/model_3.glb">
+              <img class="selectable-image" src="static/models/img_4.png" data-model-src="static/models/model_4.glb">
+              <img class="selectable-image" src="static/models/squirrel_rgba.png" data-model-src="static/models/squirrel.glb">
+              <img class="selectable-image" src="static/models/owl_rgba.png" data-model-src="static/models/owl.glb">
+              <img class="selectable-image" src="static/models/buddha_rgba.png" data-model-src="static/models/buddha.glb">
+          </div>
 
-    <div class="selection-panel">
-      
-        <img class="selectable-image selected" 
-             src="static/models/img_1.png" 
-             data-model-src="static/models/model_1.glb"
-             data-normal-src="static/models/nml_1.png">
-             
+          <!-- 脚本部分：在DOM加载后执行 -->
+          <script type="module">
+              document.addEventListener('DOMContentLoaded', async () => {
+                  try {
+                      // 导入NormalViewer
+                      const { createNormalViewer } = await import('./static/js/NormalViewer.js');
 
-        <img class="selectable-image selected" 
-             src="static/models/img_2.png" 
-             data-model-src="static/models/model_2.glb"
-             data-normal-src="static/models/nml_2.png">
-             
-       <img class="selectable-image selected" 
-             src="static/models/img_3.png" 
-             data-model-src="static/models/model_3.glb"
-             data-normal-src="static/models/nml_3.png">
-      <img class="selectable-image selected" 
-            src="static/models/img_4.png" 
-            data-model-src="static/models/model_4.glb"
-            data-normal-src="static/models/nml_4.png">
-      <img class="selectable-image selected" 
-          src="static/models/squirrel_rgba.png" 
-          data-model-src="static/models/squirrel.glb"
-          data-normal-src="static/models/squirrel_nml.png">
-      <img class="selectable-image selected" 
-        src="static/models/owl_rgba.png" 
-        data-model-src="static/models/owl.glb"
-        data-normal-src="static/models/owl_nml.png">
-      <img class="selectable-image selected" 
-        src="static/models/buddha_rgba.png" 
-        data-model-src="static/models/buddha.glb"
-        data-normal-src="static/models/buddha_nml.png">
-    </div>
+                      // 获取容器
+                      const container = document.getElementById('threejs-viewer-container');
+                      const images = document.querySelectorAll('.selectable-image');
 
-    <div id="enlarged-images-container">
-        <img id="enlarged-image" src="" alt="放大预览图">
-        <img id="enlarged-image-normal" src="" alt="放大预览法线图">
-    </div>
+                      if (!container) throw new Error('Viewer container not found');
+                      if (!images.length) throw new Error('No selectable images found');
 
+                      // 初始化查看器
+                      const viewer = createNormalViewer(container, {
+                          backgroundColor: '#333333'
+                      });
 
+                      // 定义加载函数
+                      function loadModelOnClick(event) {
+                          const image = event.currentTarget;
+                          const modelPath = image.dataset.modelSrc;
+                          
+                          // 加载模型
+                          viewer.loadModel(modelPath);
+                          
+                          // 更新选中状态
+                          images.forEach(img => img.classList.remove('selected'));
+                          image.classList.add('selected');
+                      }
 
+                      // 为每个图片绑定点击事件
+                      images.forEach(image => {
+                          image.addEventListener('click', loadModelOnClick);
+                      });
 
+                      // 初始加载第一个模型
+                      if (images.length > 0) {
+                          images[0].click();
+                      }
 
-
-
-
-
-
-
-
-        
+                  } catch (error) {
+                      console.error('Initialization failed:', error);
+                  }
+              });
+          </script>
       </div>
-    </div>
-  </section>
+  </div>
+</section>
+
 
 
 
