@@ -1,0 +1,116 @@
+/* --- Showcase Component Styles --- */
+/* 其他样式 (.showcase-container, .display-area 等) 保持不变 */
+
+.showcase-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.display-area {
+    display: flex;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+.single-image-container {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+#main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.normal-maps-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#normal-map-1, #normal-map-2 {
+    width: 100%;
+    flex: 1;
+    object-fit: contain;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+.selection-panel {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* --- .select-box 样式已更新 --- */
+.select-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    border: 4px solid #ddd;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    /* 新增: 保证图片正确填充，不变形 */
+    object-fit: cover; 
+    
+    /* 移除: 不再需要蓝色背景 */
+    /* background-color: #4A90E2; */
+}
+
+.select-box:hover {
+    border-color: #007aff;
+}
+
+.select-box.selected {
+    border-color: #007aff;
+    box-shadow: 0 0 20px rgba(0, 122, 255, 0.6);
+    transform: scale(1.05);
+}
+
+.normal-map-wrapper {
+    position: relative; /* 关键：为内部绝对定位的标签提供参照物 */
+    width: 100%;
+    flex: 1; /* 平分垂直空间 */
+    display: flex; /* 让内部图片可以更好地填充 */
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden; /* 确保标签的圆角不会露馅 */
+}
+
+/* 修改：确保图片填满新的包装容器 
+   (之前的样式现在应用在这里，选择器更精确了)
+*/
+.normal-map-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 新增：方法名标签的样式 
+*/
+.method-label {
+    position: absolute; /* 关键：绝对定位 */
+    top: 8px;           /* 距离顶部 8px */
+    left: 8px;          /* 距离左侧 8px */
+
+    /* 以下是外观样式 */
+    background-color: rgba(0, 0, 0, 0.65); /* 半透明黑色背景，确保文字可读 */
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    pointer-events: none; /* 让鼠标可以“穿透”这个标签，不影响图片操作 */
+    z-index: 10; /* 确保在图片上层 */
+}
+

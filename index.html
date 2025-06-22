@@ -27,6 +27,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="static/css/index.css">
   <link rel="stylesheet" href="./static/css/selection-panel.css">
+  <link rel="stylesheet" href="./static/css/nerual_lightrig.css">
+   <script src="./static/js/nerual_lightrig.js" defer></script>
+  
   <style>
     /* Styles for 6x6 Image Grid with Hover Preview */
     .image-grid-container {
@@ -717,43 +720,7 @@
               <img class="selectable-image" src="static/models/img_9.png" data-model-src="static/models/model_9.glb">
           </div>
           
-             <div class="content has-text-justified" style="align-self: flex-start;">
-              <p>
-                  The detailed surface normals reconstructed by LINO-UniPS can be directly applied to downstream tasks such as 3D generation.
-                  <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
-                    Hi👋3DGen:
-                  </a>
-              </p>
-          </div>
-
-          <!-- 设置导入映射 -->
-          <script type="importmap">
-              {
-                  "imports": {
-                      "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
-                      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
-                  }
-              }
-          </script>
-
-          <!-- 查看器容器 -->
-          <div class="main-viewer-container">
-              <div id="threejs-viewer-container" style="width: 100%; height: 500px; background-color: #333; border-radius: 8px;"></div>
-          </div>
-
-          <hr>
-
-          <!-- 缩略图区域 -->
-          <div class="selection-panel">
-              <!-- 注意：这里移除了所有图片的'selected'类，因为初始状态应该由脚本控制 -->
-              <img class="selectable-image" src="static/models/img_5.png" data-model-src="static/models/model_5.glb">
-              <img class="selectable-image" src="static/models/img_2.png" data-model-src="static/models/model_2.glb">
-              <img class="selectable-image" src="static/models/img_6.png" data-model-src="static/models/model_6.glb">
-              <img class="selectable-image" src="static/models/img_4.png" data-model-src="static/models/model_4.glb">
-              <img class="selectable-image" src="static/models/img_7.png" data-model-src="static/models/model_7.glb">
-              <img class="selectable-image" src="static/models/img_8.png" data-model-src="static/models/model_8.glb">
-              <img class="selectable-image" src="static/models/img_9.png" data-model-src="static/models/model_9.glb">
-          </div>
+           
 
 
 
@@ -808,6 +775,91 @@
   </div>
 </section>
 
+<section class="section hero is-light">
+   <div class="container is-max-desktop" id="comparison_container">
+         
+          <div class="content has-text-justified" style="align-self: flex-start;">
+              <p>
+                  The detailed surface normals reconstructed by LINO-UniPS can be directly applied to downstream tasks such as 3D generation.
+                  <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
+                    Hi👋3DGen:
+                  </a>
+              </p>
+          </div>
+    <div class="showcase-container">
+        <div class="display-area">
+            <div class="single-image-container">
+                <img id="main-image" src="" alt="Main Image">
+            </div>
+           <div class="normal-maps-column">
+    
+              <div class="normal-map-wrapper">
+                  <img id="normal-map-1" src="" alt="Normal Map 1">
+                  <span class="method-label">Nerual LightRig</span>
+              </div>
+              
+              <div class="normal-map-wrapper">
+                  <img id="normal-map-2" src="" alt="Normal Map 2">
+                  <span class="method-label">LINO-UniPS</span>
+              </div>
+
+          </div>
+        </div>
+
+        <div class="selection-panel">
+            <img class="select-box selected"
+                 src="static/images/nerual_lightrig/1dddb62150124f89b4fd39b96a1a328f/thumbnail.png"
+                 data-main-src="static/images/nerual_lightrig/1dddb62150124f89b4fd39b96a1a328f/ref.png"
+                 data-normal-1="static/images/nerual_lightrig/1dddb62150124f89b4fd39b96a1a328f/nml_pred.png"
+                 data-normal-2="static/images/nerual_lightrig/1dddb62150124f89b4fd39b96a1a328f/nml_predict_rgba.png"
+                 alt="Thumbnail 1">
+
+            <img class="select-box"
+                 src="static/images/nerual_lightrig/another_set/thumbnail.png"
+                 data-main-src="static/images/nerual_lightrig/1e412cfad9804ef89ec09b6a635d88f8/1e412cfad9804ef89ec09b6a635d88f8_pred.png"
+                 data-normal-1="static/images/nerual_lightrig/1e412cfad9804ef89ec09b6a635d88f8/1e412cfad9804ef89ec09b6a635d88f8_nml_pred.png"
+                 data-normal-2="static/images/nerual_lightrig/1e412cfad9804ef89ec09b6a635d88f8/nml_predict_rgba.png"
+                 alt="Thumbnail 2">
+            <img class="select-box"
+                src="static/images/nerual_lightrig/another_set/thumbnail.png"
+                data-main-src="static/images/nerual_lightrig/4b13ccc8530d43ff9dc64bb01954f06b/4b13ccc8530d43ff9dc64bb01954f06b_pred.png"
+                data-normal-1="static/images/nerual_lightrig/4b13ccc8530d43ff9dc64bb01954f06b/4b13ccc8530d43ff9dc64bb01954f06b_nml_pred.png"
+                data-normal-2="static/images/nerual_lightrig/4b13ccc8530d43ff9dc64bb01954f06b/nml_predict_rgba.png"
+                alt="Thumbnail 3">
+            <img class="select-box"
+              src="static/images/nerual_lightrig/another_set/thumbnail.png"
+              data-main-src="static/images/nerual_lightrig/cce9432bdad64d3ba58c3e116876a71a/cce9432bdad64d3ba58c3e116876a71a_pred.png"
+              data-normal-1="static/images/nerual_lightrig/cce9432bdad64d3ba58c3e116876a71a/cce9432bdad64d3ba58c3e116876a71a_nml_pred.png"
+              data-normal-2="static/images/nerual_lightrig/cce9432bdad64d3ba58c3e116876a71a/nml_predict_rgba.png"
+              alt="Thumbnail 4">
+            <img class="select-box"
+              src="static/images/nerual_lightrig/another_set/thumbnail.png"
+              data-main-src="static/images/nerual_lightrig/06cc34ad538042f49f31a395415f6b0c/06cc34ad538042f49f31a395415f6b0c_pred.png"
+              data-normal-1="static/images/nerual_lightrig/06cc34ad538042f49f31a395415f6b0c/06cc34ad538042f49f31a395415f6b0c_nml_pred.png"
+              data-normal-2="static/images/nerual_lightrig/06cc34ad538042f49f31a395415f6b0c/nml_predict_rgba.png"
+              alt="Thumbnail 5">
+            <img class="select-box"
+              src="static/images/nerual_lightrig/another_set/thumbnail.png"
+              data-main-src="static/images/nerual_lightrig/6d8e371807e4494792df4bd19770d309/6d8e371807e4494792df4bd19770d309_pred.png"
+              data-normal-1="static/images/nerual_lightrig/6d8e371807e4494792df4bd19770d309/6d8e371807e4494792df4bd19770d309_nml_pred.png"
+              data-normal-2="static/images/nerual_lightrig/6d8e371807e4494792df4bd19770d309/nml_predict_rgba.png"
+              alt="Thumbnail 6">
+            <img class="select-box"
+              src="static/images/nerual_lightrig/another_set/thumbnail.png"
+              data-main-src="static/images/nerual_lightrig/40e99b6b3d3e4c7799a2c90ec3b4888f/40e99b6b3d3e4c7799a2c90ec3b4888f_pred.png"
+              data-normal-1="static/images/nerual_lightrig/40e99b6b3d3e4c7799a2c90ec3b4888f/40e99b6b3d3e4c7799a2c90ec3b4888f_nml_pred.png"
+              data-normal-2="static/images/nerual_lightrig/40e99b6b3d3e4c7799a2c90ec3b4888f/nml_predict_rgba.png"
+              alt="Thumbnail 7">
+            <img class="select-box"
+              src="static/images/nerual_lightrig/another_set/thumbnail.png"
+              data-main-src="static/images/nerual_lightrig/161fb8f4d9894c03a569c913745d92af/161fb8f4d9894c03a569c913745d92af_pred.png"
+              data-normal-1="static/images/nerual_lightrig/161fb8f4d9894c03a569c913745d92af/161fb8f4d9894c03a569c913745d92af_nml_pred.png"
+              data-normal-2="static/images/nerual_lightrig/161fb8f4d9894c03a569c913745d92af/nml_predict_rgba.png"
+              alt="Thumbnail 8">
+
+        </div>
+    </div>
+</section>
 
 
 
