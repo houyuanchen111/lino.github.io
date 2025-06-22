@@ -311,7 +311,7 @@
               </span>
 
               <span class="link-block">
-                <a href="https://github.com/houyuanchen111/LiNo" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/houyuanchen111/LINO" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener noreferrer">
                   <span class="icon">
                     <i class="fab fa-github"></i>
                   </span>
@@ -376,11 +376,11 @@
             <div class="columns">
               <div class="column" style="margin-right: 20px;">
                 <p>
-                  <b>Overview of the LiNo-UniPS architecture,</b> featuring a Light-Normal Contextual Encoder, Decoder, and loss computation. 
+                  <b>Overview of the LINO-UniPS architecture,</b> featuring a Light-Normal Contextual Encoder, Decoder, and loss computation. 
                 </p>
                 <img src="./static/images/Method.png" alt="Left Top Image" style="width: 100%; margin-bottom: 30px;">
                 <p>
-                  LiNo-UniPS significantly performs better when processing data characterized by <b>high-frequency information</b>.
+                  LINO-UniPS significantly performs better when processing data characterized by <b>high-frequency information</b>.
                 </p>
                 <img src="./static/images/results_compare.png" alt="Left Bottom Image" style="width: 100%;">
               </div>
@@ -400,12 +400,21 @@
       </div>
     </div>
   </section>
-
-  <section class="section hero is-light">
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+     <h2 class="title is-3 has-text-centered">Feature consistency</h2>
+      <p class="subtitle is-5 has-text-centered" style="margin-top: -0.5rem; margin-bottom: 1.5rem;">
+    LINO-UniPS enhances the decoupling of lighting and normals, resulting in features with greater consistency.
+      </p>
+   <img src="static/images/feature_video.gif" alt="feature_consistency" width="1000">
+  </div>
+  
+</section>
+  <section class="section">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Some Visual Results</h2>
       <p class="subtitle is-5 has-text-centered" style="margin-top: -0.5rem; margin-bottom: 1.5rem;">
-      Hover to view an example from the multi-light input images and the corresponding surface normals reconstructed by LiNo-UniPS. 
+      Hover to view an example from the multi-light input images and the corresponding surface normals reconstructed by LINO-UniPS. 
       </p>
       <div class="image-grid-container">
         <img src="static/images/image_1.png" alt="Image 1" data-paired-image-src="static/images/normal_1.png">
@@ -440,7 +449,7 @@
         <img src="static/images/image_30.png" alt="Image 30" data-paired-image-src="static/images/normal_30.png">
       </div>
     </div>
-  </section>
+  
   
 <section class="section pb-1">
    <h2 class="title is-3 has-text-centered"> PS-Verse Dataset</h2>
@@ -665,13 +674,14 @@
 
 
 
+
 <section class="section hero is-light">
   <div class="hero-body" style="padding: 0;">
       <div class="container is-max-desktop" id="comparison_container">
           <h2 class="title is-3 has-text-centered" style="margin-top: 10px; align-self: flex-start;">Downstream Application</h2>
           <div class="content has-text-justified" style="align-self: flex-start;">
               <p>
-                  The detailed surface normals reconstructed by LiNo-UniPS can be directly applied to downstream tasks such as 3D generation.
+                  The detailed surface normals reconstructed by LINO-UniPS can be directly applied to downstream tasks such as 3D generation.
                   <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
                     Hi👋3DGen:
                   </a>
@@ -698,14 +708,54 @@
           <!-- 缩略图区域 -->
           <div class="selection-panel">
               <!-- 注意：这里移除了所有图片的'selected'类，因为初始状态应该由脚本控制 -->
-              <img class="selectable-image" src="static/models/img_1.png" data-model-src="static/models/model_1.glb">
+              <img class="selectable-image" src="static/models/img_5.png" data-model-src="static/models/model_5.glb">
               <img class="selectable-image" src="static/models/img_2.png" data-model-src="static/models/model_2.glb">
-              <img class="selectable-image" src="static/models/img_3.png" data-model-src="static/models/model_3.glb">
+              <img class="selectable-image" src="static/models/img_6.png" data-model-src="static/models/model_6.glb">
               <img class="selectable-image" src="static/models/img_4.png" data-model-src="static/models/model_4.glb">
-              <img class="selectable-image" src="static/models/squirrel_rgba.png" data-model-src="static/models/squirrel.glb">
-              <img class="selectable-image" src="static/models/owl_rgba.png" data-model-src="static/models/owl.glb">
-              <img class="selectable-image" src="static/models/buddha_rgba.png" data-model-src="static/models/buddha.glb">
+              <img class="selectable-image" src="static/models/img_7.png" data-model-src="static/models/model_7.glb">
+              <img class="selectable-image" src="static/models/img_8.png" data-model-src="static/models/model_8.glb">
+              <img class="selectable-image" src="static/models/img_9.png" data-model-src="static/models/model_9.glb">
           </div>
+          
+             <div class="content has-text-justified" style="align-self: flex-start;">
+              <p>
+                  The detailed surface normals reconstructed by LINO-UniPS can be directly applied to downstream tasks such as 3D generation.
+                  <a href="https://stable-x.github.io/Hi3DGen/" target="_blank" rel="noopener noreferrer">
+                    Hi👋3DGen:
+                  </a>
+              </p>
+          </div>
+
+          <!-- 设置导入映射 -->
+          <script type="importmap">
+              {
+                  "imports": {
+                      "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+                      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+                  }
+              }
+          </script>
+
+          <!-- 查看器容器 -->
+          <div class="main-viewer-container">
+              <div id="threejs-viewer-container" style="width: 100%; height: 500px; background-color: #333; border-radius: 8px;"></div>
+          </div>
+
+          <hr>
+
+          <!-- 缩略图区域 -->
+          <div class="selection-panel">
+              <!-- 注意：这里移除了所有图片的'selected'类，因为初始状态应该由脚本控制 -->
+              <img class="selectable-image" src="static/models/img_5.png" data-model-src="static/models/model_5.glb">
+              <img class="selectable-image" src="static/models/img_2.png" data-model-src="static/models/model_2.glb">
+              <img class="selectable-image" src="static/models/img_6.png" data-model-src="static/models/model_6.glb">
+              <img class="selectable-image" src="static/models/img_4.png" data-model-src="static/models/model_4.glb">
+              <img class="selectable-image" src="static/models/img_7.png" data-model-src="static/models/model_7.glb">
+              <img class="selectable-image" src="static/models/img_8.png" data-model-src="static/models/model_8.glb">
+              <img class="selectable-image" src="static/models/img_9.png" data-model-src="static/models/model_9.glb">
+          </div>
+
+
 
           <!-- 脚本部分：在DOM加载后执行 -->
           <script type="module">
