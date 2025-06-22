@@ -13,6 +13,31 @@ body {
     margin-bottom: 5px;
 }
 
+/* 这是一个完整的、推荐的链接样式方案 */
+
+/* 首先定义所有链接的基础样式：颜色和去掉下划线 */
+a {
+  color: #007bff; /* 基础颜色 */
+  text-decoration: none; /* 去掉下划线 */
+  transition: color 0.2s ease; /* 让颜色变化更平滑 */
+}
+
+/* 定义已访问链接的颜色 */
+a:visited {
+  color: #5a2a88; /* 已访问过的紫色 */
+}
+
+/* 定义鼠标悬停时的样式：颜色变深，并加上下划线 */
+a:hover {
+  color: #0056b3; /* 鼠标悬停时颜色变深 */
+  text-decoration: underline; /* 加上下划线 */
+}
+
+/* 定义点击瞬间的样式 */
+a:active {
+  color: #c82333; /* 点击时变为深红色 */
+}
+
 .dnerf {
   font-variant: small-caps;
 }
